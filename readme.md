@@ -1,4 +1,7 @@
 <img width="600" height="200" alt="Untitled design - 2025-11-03T155135 070" src="https://github.com/user-attachments/assets/dbd67ac8-efdb-4abe-aa82-c0a5c32161d6" />
+
+
+
 🚀 Choose Your Dev
 A real-time Solana token launch monitoring dashboard that tracks tokens created by followed developers on Pump.fun. Built with vanilla JavaScript and WebSocket connections to PumpPortal API for live market data.
 Show Image
