@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Dev - $CHOOSE</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="shortcut icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <span>Choose Your Dev</span>
+            </div>
+            <button class="manage-devs-btn" onclick="window.location.href='manage-devs.html'">
+                👥 Manage Devs
+            </button>
+            <div class="coming-soon-section">
+                <button class="nav-link disabled" disabled title="Coming soon for holders of $CHOOSE">
+                    🎯 Sniper
+                    <span class="coming-soon-badge">Soon</span>
+                </button>
+                <button class="nav-link disabled" disabled title="Coming soon for holders of $CHOOSE">
+                    📊 Trader
+                    <span class="coming-soon-badge">Soon</span>
+                </button>
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">Connecting...</span>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="chart-provider-selector">
+                <span class="chart-label">Chart:</span>
+                <button class="chart-provider-btn" id="chartProviderBtn" onclick="toggleChartProvider()">
+                    <span id="chartProviderName">Axiom</span>
+                </button>
+            </div>
+            <a href="https://x.com/ChooseYourDev_" target="_blank" class="social-link">
+                <span class="social-icon">𝕏</span> Twitter
+            </a>
+            <a href="https://github.com/chooseyourdev" target="_blank" class="social-link">
+                <span class="social-icon">⚡</span> GitHub
+            </a>
+            <div class="ca-display">
+                <span class="ca-label">CA:</span>
+                <span class="ca-address" onclick="copyToClipboard('xxxpump', this)">xxxpump</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="content-header">
+            <div class="pulse-title">
+                <span>Live Token Monitor</span>
+                <div class="pulse-icon"></div>
+            </div>
+            <div class="view-controls">
+                <button class="view-btn" onclick="toggleDebug()">🔧 Debug</button>
+                <button class="view-btn" onclick="refreshData()">🔄 Refresh</button>
+                <button class="view-btn" onclick="clearAllTokens()">🗑️ Clear</button>
+                <button class="view-btn" onclick="exportSettings()">💾 Export Setup</button>
+                <button class="view-btn" onclick="document.getElementById('importSettingsFile').click()">📂 Import Setup</button>
+                <input type="file" id="importSettingsFile" style="display: none;" accept=".json" onchange="importSettings(event)">
+            </div>
+        </div>
+
+        <!-- Three Panel Layout -->
+        <div class="three-panel-layout">
+            <!-- New Launches Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        🚀 New Launches
+                        <span class="panel-count" id="newLaunchesCount">0</span>
+                    </div>
+                    <button class="filter-toggle-btn" onclick="toggleFilters('new-launches')" title="Filters">
+                        ⚙️
+                    </button>
+                </div>
+
+                <!-- Filter Controls (Hidden by default) -->
+                <div class="filter-controls" id="new-launches-filters" style="display: none;">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Min Age</label>
+                            <input type="number" id="new-launches-minAge" placeholder="0" min="0" class="filter-input">
+                            <span class="filter-unit">min</span>
+                        </div>
+                        <div class="filter-group">
+                            <label>Max Age</label>
+                            <input type="number" id="new-launches-maxAge" placeholder="5" max="5" class="filter-input">
+                            <span class="filter-unit">min</span>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Min MC</label>
+                            <input type="number" id="new-launches-minMC" placeholder="0" min="0" class="filter-input">
+                            <span class="filter-unit">K</span>
+                        </div>
+                        <div class="filter-group">
+                            <label>Max MC</label>
+                            <input type="number" id="new-launches-maxMC" placeholder="100" class="filter-input">
+                            <span class="filter-unit">K</span>
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="apply-filter-btn" onclick="applyFilters('new-launches')">Apply</button>
+                        <button class="clear-filter-btn" onclick="clearFilters('new-launches')">Clear</button>
+                    </div>
+                </div>
+
+                <div class="panel-content" id="new-launches-content">
+                    <div class="empty-state">
+                        <h3>No new launches yet</h3>
+                        <p>Tokens launched in the last 5 minutes will appear here</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Tokens Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        📈 Active Tokens
+                        <span class="panel-count" id="activeTokensCount">0</span>
+                    </div>
+                    <button class="filter-toggle-btn" onclick="toggleFilters('active-tokens')" title="Filters">
+                        ⚙️
+                    </button>
+                </div>
+
+                <!-- Filter Controls (Hidden by default) -->
+                <div class="filter-controls" id="active-tokens-filters" style="display: none;">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Min Age</label>
+                            <input type="number" id="active-tokens-minAge" placeholder="5" min="0" class="filter-input">
+                            <span class="filter-unit">min</span>
+                        </div>
+                        <div class="filter-group">
+                            <label>Max Age</label>
+                            <input type="number" id="active-tokens-maxAge" placeholder="60" class="filter-input">
+                            <span class="filter-unit">min</span>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Min MC</label>
+                            <input type="number" id="active-tokens-minMC" placeholder="0" min="0" class="filter-input">
+                            <span class="filter-unit">K</span>
+                        </div>
+                        <div class="filter-group">
+                            <label>Max MC</label>
+                            <input type="number" id="active-tokens-maxMC" placeholder="500" class="filter-input">
+                            <span class="filter-unit">K</span>
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="apply-filter-btn" onclick="applyFilters('active-tokens')">Apply</button>
+                        <button class="clear-filter-btn" onclick="clearFilters('active-tokens')">Clear</button>
+                    </div>
+                </div>
+
+                <div class="panel-content" id="active-tokens-content">
+                    <div class="empty-state">
+                        <h3>No active tokens</h3>
+                        <p>Tokens with recent trading activity will appear here</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graduated Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        🎓 Graduated
+                        <span class="panel-count" id="graduatedCount">0</span>
+                    </div>
+                    <button class="filter-toggle-btn" onclick="toggleFilters('graduated')" title="Filters">
+                        ⚙️
+                    </button>
+                </div>
+
+                <!-- Filter Controls (Hidden by default) -->
+                <div class="filter-controls" id="graduated-filters" style="display: none;">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Min Age</label>
+                            <input type="number" id="graduated-minAge" placeholder="0" min="0" class="filter-input">
+                            <span class="filter-unit">min</span>
+                        </div>
+                        <div class="filter-group">
+                            <label>Max Age</label>
+                            <input type="number" id="graduated-maxAge" placeholder="" class="filter-input">
+                            <span class="filter-unit">min</span>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Min MC</label>
+                            <input type="number" id="graduated-minMC" placeholder="69" min="0" class="filter-input">
+                            <span class="filter-unit">K</span>
+                        </div>
+                        <div class="filter-group">
+                            <label>Max MC</label>
+                            <input type="number" id="graduated-maxMC" placeholder="" class="filter-input">
+                            <span class="filter-unit">K</span>
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="apply-filter-btn" onclick="applyFilters('graduated')">Apply</button>
+                        <button class="clear-filter-btn" onclick="clearFilters('graduated')">Clear</button>
+                    </div>
+                </div>
+
+                <div class="panel-content" id="graduated-content">
+                    <div class="empty-state">
+                        <h3>No graduated tokens</h3>
+                        <p>Tokens that reached Raydium will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debug Console -->
+    <div class="debug-console" id="debugConsole">
+        <div class="debug-header">
+            <strong>Debug Console</strong>
+            <button onclick="clearDebugConsole()">Clear</button>
+        </div>
+        <div id="debugOutput"></div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="bottom-controls">
+        <div class="bottom-left">
+            <a href="https://x.com/ChooseYourDev_" target="_blank" class="footer-link">
+                <span>𝕏</span> @ChooseYourDev_
+            </a>
+            <a href="https://github.com/chooseyourdev" target="_blank" class="footer-link">
+                <span>⚡</span> GitHub
+            </a>
+            <span class="footer-ca">
+                CA: <span class="ca-copy" onclick="copyToClipboard('xxxpump', this)">xxxpump</span>
+            </span>
+        </div>
+
+        <div class="bottom-right">
+            <div class="bottom-stat">
+                <span>Tracking: <span id="devsCount" class="stat-value">0</span> devs</span>
+            </div>
+            <div class="bottom-stat">
+                <span>Tokens: <span id="tokensCount" class="stat-value">0</span></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

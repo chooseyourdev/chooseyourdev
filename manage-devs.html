@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Dev - $CHOOSE</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="shortcut icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo" onclick="window.location.href='index.html'">
+                <div class="logo-icon"></div>
+                <span>Choose Your Dev</span>
+            </div>
+            <button class="back-btn" onclick="window.location.href='index.html'">
+                ← Back to Dashboard
+            </button>
+            <div class="coming-soon-section">
+                <button class="nav-link disabled" disabled title="Coming soon for holders of $CHOOSE">
+                    🎯 Sniper
+                    <span class="coming-soon-badge">Soon</span>
+                </button>
+                <button class="nav-link disabled" disabled title="Coming soon for holders of $CHOOSE">
+                    📊 Trader
+                    <span class="coming-soon-badge">Soon</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <a href="https://x.com/ChooseYourDev_" target="_blank" class="social-link">
+                <span class="social-icon">𝕏</span> Twitter
+            </a>
+            <a href="https://github.com/chooseyourdev" target="_blank" class="social-link">
+                <span class="social-icon">⚡</span> GitHub
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-title">
+            <div class="page-title-icon"></div>
+            Manage Your Devs
+        </div>
+
+        <!-- Tools Section -->
+        <div class="tools-section">
+            <button class="tool-btn" onclick="exportDevs()">📤 Export Devs</button>
+            <button class="tool-btn" onclick="document.getElementById('importFile').click()">📥 Import Devs</button>
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importDevs(event)">
+            <button class="tool-btn" onclick="toggleDebug()">🔧 Debug</button>
+            <button class="tool-btn" onclick="syncAllDevs()">🔄 Sync All</button>
+            <button class="tool-btn" onclick="exportSettings()">💾 Export Full Setup</button>
+            <button class="tool-btn" onclick="document.getElementById('importSettingsFile').click()">📂 Import Full Setup</button>
+            <input type="file" id="importSettingsFile" style="display: none;" accept=".json" onchange="importSettings(event)">
+            <button class="tool-btn" onclick="clearAllDevs()">🗑️ Clear All</button>
+        </div>
+
+        <!-- Add Dev Section -->
+        <div class="add-dev-section">
+            <div class="status-message" id="statusMessage"></div>
+            <div class="section-title">➕ Add New Dev</div>
+            <div class="input-group">
+                <input type="text" class="input-field" id="devName" placeholder="Dev Name (e.g., John Doe)">
+                <input type="text" class="input-field" id="devAddress" placeholder="Wallet Address">
+                <button class="add-btn" id="addBtn" onclick="addDev()">Add Dev</button>
+            </div>
+            <div class="input-group" style="margin-top: 10px;">
+                <textarea class="input-field" id="devNotes" placeholder="Notes on dev (e.g., Past projects: $XYZ - 300k ath, pumped slowly, $ZXC - 10k, nuked instantly)" style="width: 100%; height: 60px; resize: vertical;"></textarea>
+            </div>
+            
+            <!-- Past Projects Section -->
+            <div class="past-projects-section" style="margin-top: 15px;">
+                <div class="section-subtitle">📁 Past Projects (Optional)</div>
+                <div id="pastProjectsContainer">
+                    <div class="project-input-row">
+                        <input type="text" class="project-field" placeholder="Name" data-field="name">
+                        <input type="text" class="project-field" placeholder="Symbol" data-field="symbol">
+                        <input type="text" class="project-field" placeholder="ATH (e.g., 500K)" data-field="ath">
+                        <input type="text" class="project-field" placeholder="Chart URL or CA" data-field="chart">
+                    </div>
+                </div>
+                <button class="add-project-btn" onclick="addProjectRow()">+ Add Another Project</button>
+            </div>
+        </div>
+
+        <!-- Devs Grid -->
+        <div class="section-title">📊 Your Followed Devs (<span id="devCount">0</span>)</div>
+        <div class="devs-grid" id="devsGrid">
+            <!-- Empty State (shown when no devs) -->
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">👥</div>
+                <div class="empty-text">No devs added yet</div>
+                <div class="empty-subtext">Start by adding developers you want to follow above</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debug Panel -->
+    <div class="debug-panel" id="debugPanel">
+        <div class="debug-header">
+            <strong>Debug Log</strong>
+            <button onclick="clearDebug()">Clear</button>
+        </div>
+        <div id="debugOutput"></div>
+    </div>
+
+    <!-- Debug Panel -->
+    <div class="debug-panel" id="debugPanel">
+        <div class="debug-header">
+            <strong>Debug Console</strong>
+            <button onclick="clearDebug()">Clear</button>
+            <button onclick="toggleDebug()">×</button>
+        </div>
+        <div id="debugOutput"></div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="bottom-controls">
+        <div class="bottom-left">
+            <a href="https://x.com/ChooseYourDev_" target="_blank" class="footer-link">
+                <span>𝕏</span> @ChooseYourDev_
+            </a>
+            <a href="https://github.com/chooseyourdev" target="_blank" class="footer-link">
+                <span>⚡</span> GitHub
+            </a>
+            <span class="footer-ca">
+                CA: <span class="ca-copy" onclick="copyToClipboard('xxxpump', this)">xxxpump</span>
+            </span>
+        </div>
+
+        <div class="bottom-right">
+            <div class="bottom-stat">
+                <span>Total Devs: <span id="totalDevs" class="stat-value">0</span></span>
+            </div>
+            <div class="bottom-stat">
+                <span>Synced: <span id="syncedDevs" class="stat-value-green">0</span></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
