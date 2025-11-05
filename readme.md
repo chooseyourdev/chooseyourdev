@@ -3,10 +3,10 @@
 
 
 🚀 Choose Your Dev
+
+
 A real-time Solana token launch monitoring dashboard that tracks tokens created by followed developers on Pump.fun. Built with vanilla JavaScript and WebSocket connections to PumpPortal API for live market data.
-Show Image
-Show Image
-Show Image
+
 📋 Table of Contents
 
 Overview
